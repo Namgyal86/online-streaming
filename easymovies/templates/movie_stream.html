@@ -1,0 +1,47 @@
+{% extends 'user-dashboard.html' %}
+{% load static %}
+
+{% block content %}
+
+    <!-- Movie Stream Section Begin -->
+    <section class="movie-stream spad">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10">
+                    <!-- Movie Title and Description -->
+                    <div class="movie-details text-center">
+                        <h2 class="mb-3 text-white">{{ movie.title }}</h2>
+                        <p class="mb-4 text-white">{{ movie.description }}</p>
+                    </div>
+
+                    <!-- Video Player -->
+                    <div class="video-player mb-4">
+                        <video width="100%" controls>
+                            <source src="{{ movie.video_file.url }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+
+                    <!-- Additional Movie Info -->
+                    <div class="movie-info text-center text-white">
+                        <p><strong>Directed by:</strong> {{ movie.director }}</p>
+                        <p><strong>Actors:</strong> {{ movie.actors }}</p>
+                    </div>
+
+                    <!-- Download Button -->
+                    <div class="text-center mt-4">
+                        <a href="{{ movie.video_file.url }}" target="_blank" class="btn btn-primary">Download or View Video Directly</a>
+                    </div>
+
+                    <!-- Review Section -->
+                    <div class="text-center mt-5">
+                        <a href="{% url 'add_review' movie.movie_id %}" class="btn btn-secondary">Add Review</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Movie Stream Section End -->
+{% endblock %}     
+
+    {% include 'footer.html' %}

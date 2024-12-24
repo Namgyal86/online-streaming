@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+{% include 'headlink.html' %}
+<body>
+    <div class="container mt-3">
+        <h2 class="text-white">Edit user</h2>
+        <div class="container-fluid text-white">
+            <form method="POST" action="{% url 'edit_user' user.id %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="input_item mb-3">
+                    <label for="email" class="form-label">Email:</label>
+                    {{form.email}}
+                </div>
+                <div class="input_item mb-3">
+                    <label for="username" class="form-label">Username:</label>
+                    {{form.username}}
+                </div>
+    
+                <div class="input_item mb-3">
+                    <label for="first_name" class="form-label">First name:</label>
+                    {{form.first_name}}
+                </div>
+    
+                <div class="input_item mb-3">
+                    <label for="last_name" class="form-label">last name:</label>
+                    {{form.last_name}}
+                </div>
+    
+                <div class="input_item mb-3">
+                    <label for="password1" class="form-label">Password:</label>
+                    {{form.password1}}
+                </div>
+    
+                <div class="input_item mb-3">
+                    <label for="password2" class="form-label">Confirm password:</label>
+                    {{form.password2}}
+                </div>
+    
+                <div class="input_item mb-3">
+                    <label for="address" class="form-label">Address:</label>
+                    {{form.address}}
+                </div>
+    
+                <div class="input_item mb-3">
+                    <label for="tel" class="form-label">tel:</label>
+                    {{form.tel}}
+                </div>
+
+                <div class="input_item mb-3">
+                    <label for="profile_image" class="form-label">Profile image:</label>
+                    {{form.profile_image}}
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-secondary cancel-edit">Cancel</button>
+            </form>
+    
+        </div>
+    </div>
+  
+</body>
+</html>

@@ -1,0 +1,52 @@
+{% extends 'user-dashboard.html' %}
+{% load static %}
+
+{% block content %}
+<section class="add-review-section spad">
+    <div class="container">
+        <div class="row justify-content-center">
+            <!-- Movie Information -->
+            <div class="col-lg-8 col-md-10 text-center mb-5">
+                <h2 class="movie-title text-white">{{ movie.title }}</h2>
+                <p class="movie-description text-muted">{{ movie.description }}</p>
+                <p><strong>Directed by:</strong> {{ movie.director }}</p>
+                <p><strong>Actors:</strong> {{ movie.actors }}</p>
+            </div>
+
+            <!-- Review Form -->
+            <div class="col-lg-6 col-md-8">
+                <h3 class="text-white text-center mb-4">Add Your Review</h3>
+                <form method="post" action="{% url 'add_review' movie.pk %}">
+                    {% csrf_token %}
+                    <div class="input_item mb-3">
+                        <label for="ratingr" class="form-label">Rating:</label>
+                        {{form.rating}}
+                    </div>
+                    <div class="input_item mb-3">
+                        <label for="Commentary" class="form-label">Commentary:</label>
+                        {{form.commentary}}
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Submit Review</button>
+                </form>
+            </div>
+
+            <!-- Recent Reviews Section -->
+            <div class="col-lg-8 col-md-10 mt-5">
+                <h3 class="text-white mb-4">Recent Reviews</h3>
+                {% if movie.reviews.all %}
+                    <ul class="list-group">
+                        {% for review in movie.reviews.all|slice:":5" %}
+                            <li class="list-group-item">
+                                <strong>{{ review.user.username }}</strong> rated <strong>{{ review.rating }}/5</strong>
+                                <p>{{ review.commentary|default:"No comment provided." }}</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted">No reviews yet. Be the first to add one!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

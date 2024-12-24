@@ -1,0 +1,247 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Movies">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}Admin Dashboard {% endblock %}</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/elegant-icons.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/plyr.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/nice-select.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
+    <style>
+      .navbar .ms-auto {
+            margin-left: auto !important;
+      }
+    </style>
+
+</head>
+<body>
+  <div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="logo">
+        <a href="{% url 'admin_dashboard'%}"><span class="icon_profile"></span></a>
+      </div>
+      <div class="sidebar-wrapper">
+        <ul>
+          
+          <li><a href="#" data-url="{% url 'movies-details'%}" class="sidebar-link">Movies Details</a></li>
+          <li><a href="#" data-url="{% url 'add-movies' %}" class="sidebar-link">Add Movies</a></li>
+          <li><a href="#" data-url="{% url 'add-admin' %}" class="sidebar-link">Add Admin</a></li>
+          <li><a href="#" data-url="{% url 'user-details' %}" class="sidebar-link">User details</a></li>
+          <li><a href="#" data-url="{% url 'add-package' %}" class="sidebar-link">Add Packages</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Main Panel -->
+    <div class="main-panel">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Admin Dashboard</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" onclick="toggleSidebar()">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
+              <form class="d-flex" action="{% url 'admin_search' %}" method="get" role="search">
+                <div class="input-group mb-3">
+                    <!-- Dropdown for selecting search type -->
+                    <select class="form-select " name="search_type" aria-label="Search Type" style="color:black">
+                        <option value="user" style="color:black">User</option>
+                        <option value="movie" style="color:black">Movie</option>
+                    </select>
+                    <!-- Search input -->
+                    <input type="text" name="query" class="form-control" placeholder="Search" aria-label="Search" required>
+                    <!-- Search button -->
+                    <button type="submit" class="input-group-text"><i class="bi bi-search"></i></button>
+                </div>
+            </form>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="bi bi-person-fill"></i>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Profile</a></li>
+                  <li><a class="dropdown-item" href="{% url 'logout'%}">Logout</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Main Content -->
+      <main class="container mt-4">
+        <!-- Dashboard Overview Section -->
+        
+      </main>
+      
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const sidebarLinks = document.querySelectorAll(".sidebar-link");
+        const mainContent = document.querySelector("main");
+        const sidebar = document.querySelector(".sidebar");
+      // Add a button in your HTML with class "toggle-button"
+
+        /**
+         * Utility function to fetch the CSRF token.
+         * @returns {string} CSRF Token value.
+         */
+        function getCSRFToken() {
+            return document.querySelector("[name=csrfmiddlewaretoken]").value;
+        }
+
+        /**
+         * Fetch and load content into the main section.
+         * @param {string} url - The URL to fetch.
+         * @param {boolean} [showLoader=true] - Whether to display a loading message.
+         */
+        function loadContent(url) {
+            fetch(url, {
+                method: "GET",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest", // Ensures it's an AJAX request
+                },
+            })
+                .then((response) => response.text())
+                .then((html) => {
+                    console.log("Clearing previous content...");
+                    mainContent.innerHTML = ""; // Clear previous content
+                    mainContent.innerHTML = html; // Add new content
+                    console.log("Updated content:", mainContent.innerHTML);
+                })
+                .catch((error) => console.error("Error loading content:", error));
+        }
+
+
+        /**
+         * Handle form submissions via AJAX.
+         * Dynamically updates content or shows error messages.
+         * @param {HTMLFormElement} form - The form element.
+         */
+         function handleFormSubmission(form) {
+          const formData = new FormData(form);
+          const submitButton = form.querySelector("button[type=submit]"); // Find the submit button
+          const formFeedback = document.getElementById("form-feedback");
+
+          // Disable the submit button to prevent multiple submissions
+          if (submitButton) submitButton.disabled = true;
+
+          fetch(form.action, {
+              method: "POST",
+              body: formData,
+              headers: {
+                  "X-Requested-With": "XMLHttpRequest",
+                  "X-CSRFToken": getCSRFToken(),
+              },
+          })
+              .then((response) => {
+                  if (response.headers.get("Content-Type").includes("application/json")) {
+                      return response.json(); // Expect JSON response
+                  } else {
+                      return response.text(); // Expect HTML response
+                  }
+              })
+              .then((data) => {
+                  if (typeof data === "object" && data.success) {
+                      // Clear the main content and display success message
+                      mainContent.innerHTML = `<p class="alert alert-success">${data.message}</p>`;
+
+                      // Reload updated content dynamically
+                      setTimeout(() => {
+                          loadContent(form.getAttribute("data-url")); // Refresh form and table
+                      }, 2000); // Delay for showing the success message
+                  } else if (typeof data === "object" && !data.success) {
+                      // Handle form errors
+                      if (formFeedback) {
+                          formFeedback.innerHTML = `<p class="alert alert-danger">Error: ${JSON.stringify(data.errors)}</p>`;
+                      }
+                  } else {
+                      // If full HTML is returned, replace the main content
+                      mainContent.innerHTML = ""; // Clear content first
+                      mainContent.innerHTML = data;
+                  }
+              })
+              .catch((error) => {
+                  console.error("Error during form submission:", error);
+                  if (formFeedback) {
+                      formFeedback.innerHTML = `<p class="alert alert-danger">Error submitting form. Please try again.</p>`;
+                  }
+              })
+              .finally(() => {
+                  if (submitButton) submitButton.disabled = false; // Re-enable the button after completion
+              });
+        }
+        /**
+         * Event listener for sidebar link clicks.
+         * Loads the corresponding content dynamically.
+         */
+        sidebarLinks.forEach((link) => {
+            link.addEventListener("click", function (event) {
+                event.preventDefault();
+                const url = this.getAttribute("data-url");
+                loadContent(url);
+            });
+        });
+
+        /**
+         * Delegated event listener for form submissions.
+         * Listens for specific forms and handles them via AJAX.
+         */
+        mainContent.addEventListener("submit", function (event) {
+            const form = event.target;
+            if (form.id === "add-movie-form" || form.id === "add-admin-form" || form.id === "add-package-form") {
+                event.preventDefault();
+                handleFormSubmission(form);
+            }
+        });
+
+        /**
+         * Load the default content on page load.
+         */
+        const defaultUrl = sidebarLinks[0]?.getAttribute("data-url");
+        if (defaultUrl) {
+            loadContent(defaultUrl);
+        }
+
+        /**
+         * Toggle sidebar visibility.
+         */
+
+    });
+
+
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+ 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script src="{% static 'js/player.js' %}"></script>
+  <script src="{% static 'js/jquery.nice-select.min.js' %}"></script>
+  <script src="{% static 'js/mixitup.min.js' %}"></script>
+  <script src="{% static 'js/jquery.slicknav.js' %}"></script>
+  <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+{% extends "user-dashboard.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-white-center mb-4">{{ user.username }}'s Profile</h2>
+
+    <div class="row justify-content-center">
+        <!-- Profile Picture and Details Section -->
+        <div class="col-12 col-md-4 text-center mb-4">
+            <img src="{{ user.profile_image.url }}" alt="{{ user.username }}'s Profile Picture" class="img-fluid rounded-circle mb-3" style="width: 200px; height: 200px;">
+            <div class="profile-details text-white">
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Address:</strong> {{ user.address }}</p>
+                <p><strong>Phone:</strong> {{ user.tel }}</p>
+                <p><strong>Joined On:</strong> {{ user.date_joined|date:"M d, Y" }}</p>
+            </div>
+        </div>
+
+        <!-- Profile Actions Section -->
+        <div class="col-12 col-md-6">
+            <div class="profile-actions text-center">
+                <a href="#" class="btn btn-primary mb-3">Edit Profile</a>
+                <br>
+                <a href="{% url 'user_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

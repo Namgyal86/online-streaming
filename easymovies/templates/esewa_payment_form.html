@@ -1,0 +1,39 @@
+{% extends "user-dashboard.html" %}
+
+{% block content %}
+<div class="container-sm">
+    <h2 class="text-white mb-4">eSewa Payment</h2>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Complete Your Payment</h5>
+
+            <form id="esewa_payment_form" method="POST" action="https://rc-epay.esewa.com.np/api/epay/main/v2/form">
+                {% csrf_token %}
+                <!-- Hidden Fields for eSewa -->
+                <input type="hidden" name="amt" value="{{ total_amount }}">
+                <input type="hidden" name="txnid" value="{{ transaction_uuid }}">
+                <input type="hidden" name="scd" value="{{ product_code }}">
+                <input type="hidden" name="su" value="{{ success_url }}">
+                <input type="hidden" name="fu" value="{{ failure_url }}">
+                <input type="hidden" name="product_info" value="Subscription Payment">
+                <input type="hidden" name="firstname" value="{{ request.user.first_name }}">
+                <input type="hidden" name="email" value="{{ request.user.email }}">
+                <input type="hidden" name="signature" value="{{ signature }}">
+                
+                <!-- Add any other required fields if necessary -->
+            </form>
+
+            <p class="text-white">You will be redirected to eSewa to complete the payment.</p>
+            <button class="btn btn-success" onclick="document.getElementById('esewa_payment_form').submit();">Proceed to eSewa</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Automatically submit the form after page loads
+    window.onload = function() {
+        document.getElementById('esewa_payment_form').submit();
+    };
+</script>
+{% endblock %}

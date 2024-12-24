@@ -1,0 +1,82 @@
+{% load static %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2 class="text-center text-white mb-4">Add Movies</h2>
+            <div class="container-fluid">
+                <form method="POST" id="add-movie-form" action="{% url 'add-movies' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <ul>
+                                {% for field, errors in form.errors.items %}
+                                    {% for error in errors %}
+                                        <li>{{ field|capfirst }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    <div class="input_item mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        {{form.title}}
+                    </div>
+                    <div class="input_item mb-3">
+                        <label for="release_date" class="form-label">Release Date</label>
+                        {{form.release_date}}
+                    </div>
+
+                    <div class="input_item mb-3">
+                        <label for="total_views" class="form-label">Total Views</label>
+                        {{form.total_views}}
+                    </div>
+
+                    <div class="input_item mb-3">
+                        <label for="rating" class="form-label">Rating</label>
+                        {{form.rating}}
+                    </div>
+
+                    <div class="input_item mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        {{form.category}}
+                    </div>
+
+                    <div class="input_item mb-3">
+                        <label for="director" class="form-label">Director</label>
+                        {{form.director}}
+                    </div>
+
+                    <div class="input_item mb-3">
+                        <label for="actors" class="form-label">Actors</label>
+                        {{form.actors}}
+                    </div>
+                    <div class="input_item mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        {{form.description}}
+                    </div>
+
+                    <div class="input_item mb-3">
+                        <label for="genre" class="form-label">Genre</label>
+                        {{form.genre}}
+                    </div>
+
+                    <div class="input_item mb-3">
+                        <label for="video_file" class="form-label">Video File</label>
+                        {{form.video_file}}
+                    </div>
+
+                    <div class="input_item mb-3">
+                        <label for="thumbnail" class="form-label">Thumbnail</label>
+                        {{form.thumbnail}}
+                    </div>
+
+                    <div class="input_item mb-3">
+                        <label for="cover_image" class="form-label">Cover Image (Optional)</label>
+                        {{form.cover_image}}
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Add Movie</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

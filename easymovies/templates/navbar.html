@@ -1,0 +1,60 @@
+{% load static %}
+
+
+{% block content%}
+<header class="header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-2">
+                <div class="header__logo">
+                    <a href="{% url 'home' %}">
+                        <img src="{% static 'img/logo.png' %}" alt="">
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="header__nav">
+                    <nav class="header__menu mobile-menu">
+                        <ul>
+                            <li class="#"><a href="{% url 'home' %}">Homepage</a></li>
+                            <li><a href="#">Categories <span class="arrow_carrot-down"></span></a>
+                                <ul class="dropdown">
+                                    {% for key, name in categories %}
+                                        <li><a class="dropdown-item text-black" href="{% url 'movies_by_category' category_name=key %}">{{ name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            <li><a href="{% url 'blog'%}">Our Blog</a></li>
+                            <li><a href="{% url 'contact' %}">Contacts</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="header__right dropdown">
+                    <a href="#" class="dropdown-toggle" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="icon_profile"></span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        {% if user.is_authenticated %}
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    Welcome, {{ user.username }}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a class="dropdown-item" href="{% url 'login_page' %}">Login</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu-wrap"></div>
+    </div>
+</header>
+{% endblock %}

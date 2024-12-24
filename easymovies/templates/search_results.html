@@ -1,0 +1,26 @@
+{% extends "user-dashboard.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Search Results</h2>
+    {% if movies %}
+        <div class="row">
+            {% for movie in movies %}
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <img src="{{ movie.thumbnail.url }}" class="card-img-top" alt="{{ movie.title }}">
+                        <div class="card-body">
+                            <h5 class="card-title ">{{ movie.title }}</h5>
+                            <p class="text-dark">Year: {{ movie.release_year }}</p>
+                            <p class="text-dark">Genre: {{ movie.category.title }}</p>
+                            <a href="{% url 'watch_movies' movie.movie_id %}" class="btn btn-primary">Watch Now</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No movies found matching the search criteria.</p>
+    {% endif %}
+</div>
+{% endblock %}

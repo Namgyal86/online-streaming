@@ -1,0 +1,77 @@
+<div class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__links">
+                    <span>Movie Details</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="movie-details spad">
+    <div class="container">
+        {% if movies %}
+            {% for movie in movies %}
+                <div class="movie__details__content">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="movie__details__pic" style="max-width: 100%; height: auto;">
+                                <img src="{{ movie.thumbnail.url }}" alt="{{ movie.title }}" class="img-fluid">
+                                <div class="view"><i class="fa fa-eye" aria-label="Views"></i> {{ movie.total_views }}</div>
+                            </div>
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="movie__details__text">
+                                <div class="movie__details__title">
+                                    <h3 class="text-white">{{ movie.title }}</h3>
+                                    <span>Directed by {{ movie.director }}</span>
+                                </div>
+                                <div class="movie__details__rating">
+                                    <div class="rating">
+                                        {% for i in "12345" %}
+                                            <i class="fa {% if movie.rating|floatformat >= forloop.counter %}fa-star{% else %}fa-star-o{% endif %}"></i>
+                                        {% endfor %}
+                                    </div>
+                                    <span>{{ movie.rating }} / 5 Rating</span>
+                                </div>
+                                <p>{{ movie.description }}</p>
+                                <div class="movie__details__widget">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6">
+                                            <ul>
+                                                <li><span>Category:</span> {{ movie.category }}</li>
+                                                <li><span>Genre:</span> {{ movie.genre }}</li>
+                                                <li><span>Actors:</span> {{ movie.actors }}</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6">
+                                            <ul>
+                                                <li><span>Release Date:</span> {{ movie.release_date }}</li>
+                                                <li><span>Views:</span> {{ movie.total_views }}</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Delete button for admins only -->
+                                {% if user.is_staff %}
+                                    <div class="mt-4">
+                                        <a href="{% url 'delete_movie' movie.movie_id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this movie?');">
+                                            Delete Movie
+                                        </a>
+                                    </div>
+                                {% endif %}
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            {% endfor %}
+        {% else %}
+            <p>No movie details are available at this time. Please check back later.</p>
+        {% endif %}
+    </div>
+</section>

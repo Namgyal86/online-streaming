@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="text-white">Movies in {{ category_name|title }} Category</h2>
+<div class="movie-list" style="color: whitesmoke;">
+    {% for movie in movies %}
+        <div class="movie-card">
+            <img src="{{ movie.thumbnail.url }}" alt="{{ movie.title }}">
+            <h3>{{ movie.title }}</h3>
+            <p>{{ movie.description }}</p>
+        </div>
+    {% empty %}
+        <p>No movies found in this category.</p>
+    {% endfor %}
+</div>
+{% endblock %}

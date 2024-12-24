@@ -1,0 +1,444 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Movies">
+    <meta name="keywords" content="Anime, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}User-Easy movies {% endblock %}</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&display=swap"rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css'%}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/elegant-icons.css'%}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/plyr.css'%}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/nice-select.css'%}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css'%}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/slicknav.min.css'%}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/style.css'%}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/userdashboard.css' %}">
+</head>
+
+<body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Header Section Begin -->
+    <header class="header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-2">
+                    <div class="header__logo ">
+                        <a href="{% url 'user_dashboard' %}" style="color:aliceblue">
+                            {{user.username}}
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="header__nav">
+                        <nav class="header__menu mobile-menu">
+                            <ul>
+                                <li class="#"><a href="{% url 'user_dashboard' %}">Homepage</a></li><!--user homepage-->
+                                <li><a href="#">Categories <span class="arrow_carrot-down"></span></a>
+                                    <ul class="dropdown">
+                                        {% for key, name in categories %}
+                                            <li><a class="dropdown-item text-black" href="{% url 'movies_by_category' category_name=key %}">{{ name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                                
+                                <li><a href="{% url 'subscription' %}">Subscription</a></li>
+                                <li><a href="{% url 'user-profile'%}">User Profile</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="header__right dropdown">
+                        <a href="#" class="search-switch" data-bs-toggle="modal" data-bs-target="#searchModal">
+                            <span class="icon_search"></span>
+                        </a>
+                        <a href="#" class="dropdown-toggle" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="icon_profile"></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            {% if user.is_authenticated %}
+                                <li>
+                                    <a class="dropdown-item " href="#" style="color: black;">
+                                        Welcome, {{ user.username }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item " href="{% url 'logout' %}" style="color: black;">Logout</a>
+                                </li>
+                            {% else %}
+                                <li>
+                                    <a class="dropdown-item " href="{% url 'login_page' %}" style="color: black;">Login</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div> 
+    </header>
+    {% block content %}
+    <!-- Header End -->
+    <main>
+    <!-- Hero Section Begin -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero__slider owl-carousel">
+                {% for movie in movies %}
+                <div class="hero__items set-bg" data-setbg="{{movie.thumbnail.url}}">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="hero__text">
+                                <div class="label">{{movie.category}}</div>
+                                <h2>{{ movie.title}}</h2>
+                                <p>{{ movie.description | truncatewords:20 }}</p>
+                                <a href="{% url 'watch_movies' movie.movie_id %}"><span>Watch Now</span> <i class="fa fa-angle-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <!-- Hero Section End -->
+     <!-- Product Section Begin -->
+    <section class="product spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="recommendation__product">
+                        <div class="row">
+                            <div class="col-lg-8 col-md-8 col-sm-8">
+                                <div class="section-title">
+                                    <h4>Recommended for You</h4>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <div class="btn__all">
+                                    <a href="{% url 'view_all_recommendations'%}" class="primary-btn">View All <span class="arrow_right"></span></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            {% for movie in recommendations %}
+                            <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg" data-setbg="{{ movie.thumbnail.url }}">
+                                        <div class="overlay">
+                                            <a href="{% url 'watch_movies' movie.movie_id %}" class="btn">Watch Movie</a>
+                                            <a href="{% url 'about_movie' movie_id=movie.movie_id %}" class="btn">Movie Details</a>
+                                        </div>
+                                        <div class="view"><i class="fa fa-eye"></i> {{ movie.total_views }}</div>
+                                    </div>
+                                    <div class="product__item__text">
+                                        <ul>
+                                            <li>Recommended</li>
+                                            <li>Movie</li>
+                                        </ul>
+                                        <h5>
+                                            <a href="#">{{ movie.title }}</a>
+                                        </h5>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>    
+                    <div class="trending__product">
+                        <div class="row">
+                            <div class="col-lg-8 col-md-8 col-sm-8">
+                                <div class="section-title">
+                                    <h4>Trending Now</h4>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <div class="btn__all">
+                                    <a href="{% url 'view_all_trending' %}" class="primary-btn">View All <span class="arrow_right"></span></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            {% for movie in trending_movies %}
+                            <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg" data-setbg="{{movie.thumbnail.url}}">
+                                        <div class="overlay">
+                                            <a href="{% url 'watch_movies' movie.movie_id %}" class="btn">Watch Movie</a>
+                                            <a href="{% url 'about_movie' movie_id=movie.movie_id %}" class="btn">Movie Details</a>
+                                        </div>
+                                        <!-- <div class="ep">{{movie.runtime}}mins</div>
+                                        <div class="comment"><i class="fa fa-comments"></i> </div> -->
+                                        <div class="view"><i class="fa fa-eye"></i> {{movies.total_views}}</div>
+                                    </div>
+                                    <div class="product__item__text">
+                                        <ul>
+                                            <!-- <li>{{ movie.status}}</li> -->
+                                            <li>Movie</li>
+                                        </ul>
+                                        <h5>
+                                            <a href="{% url 'about_movie' movie_id=movie.movie_id %}">{{ movie.title}}</a>
+                                        </h5>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="popular__product">
+                        <div class="row">
+                            <div class="col-lg-8 col-md-8 col-sm-8">
+                                <div class="section-title">
+                                    <h4>Popular Shows</h4>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <div class="btn__all">
+                                    <a href="{% url 'view_all_popular' %}" class="primary-btn">View All <span class="arrow_right"></span></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            {% for movie in popular_movies %}
+                            <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg" data-setbg="{{movie.thumbnail.url}}">
+                                        <!-- <div class="ep">18 / 18</div>
+                                        <div class="comment"><i class="fa fa-comments"></i> 11</div> -->
+                                        <div class="overlay">
+                                            <a href="{% url 'watch_movies' movie.movie_id %}" class="btn">Watch Movie</a>
+                                            <a href="{% url 'about_movie' movie_id=movie.movie_id %}" class="btn">Movie Details</a>
+                                        </div>
+                                        <div class="view"><i class="fa fa-eye"></i> {{ movie.total_views}}</div>
+                                    </div>
+                                    <div class="product__item__text">
+                                        <ul>
+                                            <li>Popular</li>
+                                            <li>Movie</li>
+                                        </ul>
+                                        <h5>
+                                            <a href="{% url 'about_movie' movie_id=movie.movie_id  %}">{{ movie.title}}</a>
+                                           
+                                        </h5>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="recent__product">
+                        <div class="row">
+                            <div class="col-lg-8 col-md-8 col-sm-8">
+                                <div class="section-title">
+                                    <h4>Recently Added Shows</h4>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <div class="btn__all">
+                                    <a href="{% url 'view_all_recently_added' %}" class="primary-btn">View All <span class="arrow_right"></span></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            {% for movie in recently_added_movies %}
+                            <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg" data-setbg="{{movie.thumbnail.url}}">
+                                        <!-- <div class="ep">18 / 18</div>
+                                        <div class="comment"><i class="fa fa-comments"></i> 11</div> -->
+                                        <div class="overlay">
+                                            <a href="{% url 'watch_movies' movie.movie_id %}" class="btn">Watch Movie</a>
+                                            <a href="{% url 'about_movie' movie_id=movie.movie_id %}" class="btn">Movie Details</a>
+                                        </div>
+                                        <div class="view"><i class="fa fa-eye"></i> {{movie.total_views }}</div>
+                                    </div>
+                                    <div class="product__item__text">
+                                        <h5><a href="{% url 'movie_detail' movie.movie_id %}">{{ movie.title }}</a></h5>
+                                        <p>Category: {{ movie.get_category_display }}</p>
+                                        <p>Release Date: {{ movie.release_date }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-8">
+                    <div class="product__sidebar">
+                        <div class="product__sidebar__view">
+                            <div class="section-title">
+                                <h5>Top Views</h5>
+                            </div>
+                            <ul class="filter__controls">
+                                <li class="{% if selected_timeframe == 'day' %}active{% endif %}">
+                                    <a href="#" data-timeframe="day">Day</a>
+                                </li>
+                                <li class="{% if selected_timeframe == 'week' %}active{% endif %}">
+                                    <a href="#" data-timeframe="week">Week</a>
+                                </li>
+                                <li class="{% if selected_timeframe == 'month' %}active{% endif %}">
+                                    <a href="#" data-timeframe="month">Month</a>
+                                </li>
+                                <li class="{% if selected_timeframe == 'year' %}active{% endif %}">
+                                    <a href="#" data-timeframe="year">Year</a>
+                                </li>
+                            </ul>
+                            <div id="filter-gallery" class="filter__gallery">
+                                {% for movie in top_viewed_movies %}
+                                    <div class="product__sidebar__view__item set-bg" style="background-image: url('{{ movie.thumbnail.url }}');">
+                                        <div class="view"><i class="fa fa-eye"></i> {{ movie.total_views }}</div>
+                                        <h5><a href="{% url 'watch_movies' movie.movie_id %}">{{ movie.title }}</a></h5>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>                        
+                        <div class="product__sidebar__comment">
+                            <div class="section-title">
+                                <h5>New Comment</h5>
+                            </div>
+                            {% for comment in recent_comments %}
+                            <div class="product__sidebar__comment__item">
+                                <div class="product__sidebar__comment__item__pic">
+                                    <img src="{{ comment.movie.thumbnail.url}}" alt="">
+                                </div>
+                                <div class="product__sidebar__comment__item__text">
+                                    <ul>
+                                        <!-- <li>Active</li> -->
+                                        <li>Movie</li>
+                                    </ul>
+                                    <h5><a href="{% url 'watch_movies' comment.movie_id %}">{{ comment.movie.title}}</a></h5>
+                                    <span><i class="fa fa-eye"></i> {{ comment.movie.total_views}}</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    </section>   
+    </main>
+    <script>
+        document.querySelectorAll('.filter__controls a').forEach(link => {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();  // Prevent the default link behavior
+                const timeframe = this.getAttribute('data-timeframe');
+    
+                fetch(`{% url 'user_dashboard' %}?timeframe=${timeframe}`)
+                    .then(response => response.text())
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const newGalleryContent = doc.getElementById('filter-gallery').innerHTML;
+                        
+                        document.getElementById('filter-gallery').innerHTML = newGalleryContent;
+    
+                        // Update active class on the clicked link
+                        document.querySelectorAll('.filter__controls a').forEach(link => link.parentElement.classList.remove('active'));
+                        this.parentElement.classList.add('active');
+                    })
+                    .catch(error => console.error('Error loading movies:', error));
+            });
+        });
+    </script>
+
+{% endblock %}
+    
+    <!-- Footer Section Begin -->
+    <footer class="footer">
+        <div class="page-up">
+            <a href="#" id="scrollToTopButton"><span class="arrow_carrot-up"></span></a>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="footer__logo">
+                        <a href="{% url 'home'}"><img src="{% static 'img/logo.png'% }" alt=""></a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="footer__nav">
+                        <ul>
+                            <li class="active"><a href="{% url 'home'%}">Homepage</a></li>
+                            <li><a href="">Categories</a></li>
+                            <li><a href="{% url 'blog'%}">Our Blog</a></li>
+                            <li><a href="{% url 'contact' %}">Contacts</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved  <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Tamuzz</a>
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer Section End -->
+     <!-- Search Modal -->
+     <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="searchModalLabel">Search Movies</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'movie_search' %}" method="GET">
+                        <div class="form-group mb-2">
+                            <select name="option" class="form-control">
+                                <option value="name" selected>Search By</option>
+                                <option value="name">Name</option>
+                                <option value="category">Category:</option>
+                                <option value="release_year">Release Year</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-2">
+                            <input type="text" name="textoption" placeholder="Enter search term" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Search</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    
+
+    <!-- Js Plugins -->
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+ 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="{% static 'js/player.js' %}"></script>
+    <script src="{% static 'js/jquery.nice-select.min.js' %}"></script>
+    <script src="{% static 'js/mixitup.min.js' %}"></script>
+    <script src="{% static 'js/jquery.slicknav.js' %}"></script>
+    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+</html>

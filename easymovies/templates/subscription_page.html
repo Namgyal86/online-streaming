@@ -1,0 +1,52 @@
+{% extends 'user-dashboard.html' %}
+{% load static %}
+{% block title %}Subscription{% endblock %}
+{% block content %}
+<div class="container-sm">
+    <h1 class="text-white mb-4 fs-3 fs-md-2 fs-lg-1">Subscription Packages</h1>
+
+    {% if active_subscription %}
+        <div class="alert alert-info mb-4">
+            <h3>Current Subscription Details:</h3>
+            <p><strong>Package:</strong> {{ active_subscription.package.package_name }}</p>
+            <p><strong>End Date:</strong> {{ active_subscription.end_date }}</p>
+            <p><strong>Features:</strong> {{ active_subscription.package.get_features }}</p>
+            <p><strong>Status:</strong> {{ active_subscription.get_status_display }}</p>
+            <p><strong>Note:</strong> Your current subscription is active. You can only subscribe to a new package once this subscription expires.</p>
+        </div>
+    {% else %}
+        <div class="alert alert-warning mb-4">You have no active subscription. Choose a package to subscribe.</div>
+    {% endif %}
+
+    {% if not active_subscription or active_subscription.end_date < now %}
+        <h2 class="text-white mb-3">Available Packages:</h2>
+        <div class="row g-4">
+            {% csrf_token %}
+            {% for package in packages %}
+            <div class="col-12 col-sm-6 col-md-4">
+                <div class="card h-100 mb-3">
+                    <div class="card-body p-3">
+                        <h4 class="card-title">{{ package.package_name }}</h4>
+                        <ul class="list-unstyled">
+                            <li><strong>Price:</strong> Rs {{ package.package_price }}</li>
+                            <li><strong>Quality:</strong> {{ package.streaming_quality }}</li>
+                            <li><strong>Devices:</strong> {{ package.device_limit }}</li>
+                            <li><strong>Access Level:</strong> {{ package.content_access_level }}</li>
+                            <li><strong>Parental Controls:</strong> {% if package.parental_controls %}Yes{% else %}No{% endif %}</li>
+                            <li><strong>Trial:</strong> {% if package.is_trial %}Yes{% else %}No{% endif %}</li>
+                        </ul>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="package_id" value="{{ package.package_id }}">
+                            <button type="submit" class="btn btn-primary mt-2">Subscribe</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning">You cannot subscribe to a new package until your current subscription expires.</div>
+    {% endif %}
+</div>
+{% endblock %}

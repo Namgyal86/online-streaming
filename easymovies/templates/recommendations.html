@@ -1,0 +1,44 @@
+{% extends 'user-dashboard.html'%}
+{% load static %}
+
+{% block content %}
+<main>
+    <!-- Hero Section for Recommendations -->
+    <section class="hero">
+        <div class="container">
+            <h2>Recommended Movies for {{ user.username }}</h2>
+            <div class="hero__slider owl-carousel">
+                {% for movie in recommendations %}
+                <div class="hero__items set-bg" data-setbg="{{ movie.thumbnail.url }}">
+                    <div class="hero__text">
+                        <h2>{{ movie.title }}</h2>
+                        <p>{{ movie.description | truncatewords:20 }}</p>
+                        <a href="{% url 'watch_movies' movie.movie_id %}"><span>Watch Now</span> <i class="fa fa-angle-right"></i></a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Additional Sections (Trending, Popular, etc.) -->
+    <section class="product spad">
+        <div class="container">
+            <div class="section-title">
+                <h4>Trending Recommendations</h4>
+            </div>
+            <div class="row">
+                {% for movie in trending_recommendations %}
+                <div class="col-lg-4 col-md-6 col-sm-6">
+                    <div class="product__item set-bg" data-setbg="{{ movie.thumbnail.url }}">
+                        <h5><a href="{% url 'movie_detail' movie.movie_id %}">{{ movie.title }}</a></h5>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</main>
+
+
+{% end content %}

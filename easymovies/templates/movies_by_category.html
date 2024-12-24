@@ -1,0 +1,19 @@
+{% extends 'user-dashboard.html' %}
+{% block content %}
+<div class="container">
+    <h2>{{ title }}</h2>
+    <div class="row">
+        {% for movie in movies %}
+            <div class="col-md-3">
+                <div class="movie-item">
+                    <img src="{{ movie.thumbnail.url }}" alt="{{ movie.title }}">
+                    <h5 class="text-white">{{ movie.title }}</h5>
+                    <p class="text-white">Rating: {{ movie.rating }}</p><br/>
+                    <p class="text-white">Description: {{movie.description | truncatewords:20 }}</p>
+                </div>
+    
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

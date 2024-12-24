@@ -1,0 +1,290 @@
+{% extends 'base.html' %}
+{%block title%}Home-easymovies{%endblock%}
+{%block content %}
+<style>
+    .product__item__pic {
+    width: 100%;
+    height: 300px; /* Adjust height as needed */
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    transition: opacity 0.3s ease;
+}
+
+.product__item__pic:hover {
+    opacity: 0.7;
+}
+
+.product__item__pic .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: opacity 0.3s ease;
+}
+
+.product__item__pic:hover .overlay {
+    opacity: 1;
+}
+
+.product__item__pic .btn {
+    text-decoration: none;
+    color: #fff;
+    background-color: #e50914;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 5px;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.product__item__pic .btn:hover {
+    background-color: #f40612;
+}
+</style>
+
+    <!-- Hero Section Begin -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero__slider owl-carousel">
+                {% for movie in movies %}
+                <div class="hero__items set-bg" data-setbg="{{movie.thumbnail.url}}">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="hero__text">
+                                <div class="label">{{movie.category}}</div>
+                                <h2>{{ movie.title}}</h2>
+                                <p>{{ movie.description | truncatewords:20 }}</p>
+
+                                {% if request.user.is_authenticated %}
+                                    {% if active_subscription %}
+                                    <a href="{% url 'watch_movies' movie.movie_id %}"><span>Watch Now</span> <i class="fa fa-angle-right"></i></a>
+                                    {% else %}
+                                        <p>Please subscribe to watch movies.</p>
+                                    {% endif %}
+                                {% else %}
+                                    <a href="{% url 'login_page' %}?next={% url 'watch_movies' movie.movie_id %}"><span>Login to Watch</span><i class="fa fa-angle-right"></i></a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <!-- Hero Section End -->
+     <!-- Product Section Begin -->
+    <section class="product spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">    
+                    <div class="trending__product">
+                        <div class="row">
+                            <div class="col-lg-8 col-md-8 col-sm-8">
+                                <div class="section-title">
+                                    <h4>Trending Now</h4>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <div class="btn__all">
+                                    <a href="{% url 'view_all_trending' %}" class="primary-btn">View All <span class="arrow_right"></span></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            {% for movie in trending_movies %}
+                            <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg" data-setbg="{{movie.thumbnail.url}}">
+                                        <div class="overlay">
+                                            <a href="{% url 'watch_movies' movie.movie_id %}" class="btn">Watch Movie</a>
+                                            <a href="{% url 'about_movie' movie_id=movie.movie_id %}" class="btn">Movie Details</a>
+                                        </div>
+                                        <!-- <div class="ep">{{movie.runtime}}mins</div>
+                                        <div class="comment"><i class="fa fa-comments"></i> </div> -->
+                                        <div class="view"><i class="fa fa-eye"></i> {{movies.total_views}}</div>
+                                    </div>
+                                    <div class="product__item__text">
+                                        <ul>
+                                            <!-- <li>{{ movie.status}}</li> -->
+                                            <li>Movie</li>
+                                        </ul>
+                                        <h5>
+                                            <a href="{% url 'about_movie' movie_id=movie.movie_id  %}">{{ movie.title}}</a>
+                                        </h5>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="popular__product">
+                        <div class="row">
+                            <div class="col-lg-8 col-md-8 col-sm-8">
+                                <div class="section-title">
+                                    <h4>Popular Shows</h4>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <div class="btn__all">
+                                    <a href="{% url 'view_all_popular' %}" class="primary-btn">View All <span class="arrow_right"></span></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            {% for movie in popular_movies %}
+                            <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg" data-setbg="{{movie.thumbnail.url}}">
+                                        <!-- <div class="ep">18 / 18</div>
+                                        <div class="comment"><i class="fa fa-comments"></i> 11</div> -->
+                                        <div class="overlay">
+                                            <a href="{% url 'watch_movies' movie.movie_id %}" class="btn">Watch Movie</a>
+                                            <a href="{% url 'about_movie' movie_id=movie.movie_id %}" class="btn">Movie Details</a>
+                                        </div>
+                                        <div class="view"><i class="fa fa-eye"></i> {{ movie.total_views}}</div>
+                                    </div>
+                                    <div class="product__item__text">
+                                        <ul>
+                                            <li>Popular</li>
+                                            <li>Movie</li>
+                                        </ul>
+                                        <h5>
+                                            <a href="{% url 'about_movie' movie_id=movie.movie_id  %}">{{ movie.title}}</a>
+                                           
+                                        </h5>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="recent__product">
+                        <div class="row">
+                            <div class="col-lg-8 col-md-8 col-sm-8">
+                                <div class="section-title">
+                                    <h4>Recently Added Shows</h4>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <div class="btn__all">
+                                    <a href="{% url 'view_all_recently_added' %}" class="primary-btn">View All <span class="arrow_right"></span></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            {% for movie in recently_added_movies %}
+                            <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg" data-setbg="{{movie.thumbnail.url}}">
+                                        <!-- <div class="ep">18 / 18</div>
+                                        <div class="comment"><i class="fa fa-comments"></i> 11</div> -->
+                                        <div class="overlay">
+                                            <a href="{% url 'watch_movies' movie.movie_id %}" class="btn">Watch Movie</a>
+                                            <a href="{% url 'about_movie' movie_id=movie.movie_id %}" class="btn">Movie Details</a>
+                                        </div>
+                                        <div class="view"><i class="fa fa-eye"></i> {{movie.total_views }}</div>
+                                    </div>
+                                    <div class="product__item__text">
+                                        <h5><a href="{% url 'movie_detail' movie.movie_id %}">{{ movie.title }}</a></h5>
+                                        <p>Category: {{ movie.get_category_display }}</p>
+                                        <p>Release Date: {{ movie.release_date }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-8">
+                    <div class="product__sidebar">
+                        <div class="product__sidebar__view">
+                            <div class="section-title">
+                                <h5>Top Views</h5>
+                            </div>
+                            <ul class="filter__controls">
+                                <li class="{% if selected_timeframe == 'day' %}active{% endif %}">
+                                    <a href="#" data-timeframe="day">Day</a>
+                                </li>
+                                <li class="{% if selected_timeframe == 'week' %}active{% endif %}">
+                                    <a href="#" data-timeframe="week">Week</a>
+                                </li>
+                                <li class="{% if selected_timeframe == 'month' %}active{% endif %}">
+                                    <a href="#" data-timeframe="month">Month</a>
+                                </li>
+                                <li class="{% if selected_timeframe == 'year' %}active{% endif %}">
+                                    <a href="#" data-timeframe="year">Year</a>
+                                </li>
+                            </ul>
+                            <div id="filter-gallery" class="filter__gallery">
+                                {% for movie in top_viewed_movies %}
+                                    <div class="product__sidebar__view__item set-bg" style="background-image: url('{{ movie.thumbnail.url }}');">
+                                        <div class="view"><i class="fa fa-eye"></i> {{ movie.total_views }}</div>
+                                        <h5><a href="{% url 'watch_movies' movie.movie_id %}">{{ movie.title }}</a></h5>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>                        
+                        <div class="product__sidebar__comment">
+                            <div class="section-title">
+                                <h5>New Comment</h5>
+                            </div>
+                            {% for comment in recent_comments %}
+                            <div class="product__sidebar__comment__item">
+                                <div class="product__sidebar__comment__item__pic">
+                                    <img src="{{ comment.movie.thumbnail.url}}" alt="">
+                                </div>
+                                <div class="product__sidebar__comment__item__text">
+                                    <ul>
+                                        <!-- <li>Active</li> -->
+                                        <li>Movie</li>
+                                    </ul>
+                                    <h5><a href="{% url 'watch_movies' comment.movie_id %}">{{ comment.movie.title}}</a></h5>
+                                    <span><i class="fa fa-eye"></i> {{ comment.movie.total_views}}</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</section>   
+<script>
+    document.querySelectorAll('.filter__controls a').forEach(link => {
+        link.addEventListener('click', function (event) {
+            event.preventDefault();  // Prevent the default link behavior
+            const timeframe = this.getAttribute('data-timeframe');
+
+            fetch(`{% url 'user_dashboard' %}?timeframe=${timeframe}`)
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const newGalleryContent = doc.getElementById('filter-gallery').innerHTML;
+                    
+                    document.getElementById('filter-gallery').innerHTML = newGalleryContent;
+
+                    // Update active class on the clicked link
+                    document.querySelectorAll('.filter__controls a').forEach(link => link.parentElement.classList.remove('active'));
+                    this.parentElement.classList.add('active');
+                })
+                .catch(error => console.error('Error loading movies:', error));
+        });
+    });
+</script>
+
+{% endblock %}
+

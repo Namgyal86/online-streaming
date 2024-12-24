@@ -1,0 +1,174 @@
+*{
+    box-sizing: border-box;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+/* General Layout Adjustments */
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+.main-panel {
+    flex-grow: 1;
+    background: #0b0c2a;
+    color: #df1212;
+    padding: 20px;
+    margin-left: 250px; /* Adjust for sidebar */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Sidebar Styling */
+.sidebar {
+    background-color: #343a40;
+    color: #fff;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 250px;
+    padding-top: 20px;
+    transition: all 0.3s ease;
+}
+
+.sidebar .logo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sidebar-wrapper {
+    padding-left: 10px;
+}
+
+.sidebar-link {
+    display: block;
+    color: #fff;
+    padding: 15px;
+    text-decoration: none;
+    border-bottom: 1px solid #ddd;
+    transition: background 0.3s ease;
+}
+
+.sidebar-link:hover {
+    background-color: #495057;
+}
+
+/* Adjust Card Layout */
+.row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.col-md-6, .col-lg-4 {
+    padding: 10px; /* Ensures spacing between cards */
+}
+
+.card {
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    background-color: #fff;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card:hover {
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.navbar .ms-auto {
+margin-left: auto !important;
+}
+
+/* Responsive adjustments for Sidebar */
+.sidebar {
+    background-color: #343a40;
+    color: #fff;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    height:100%;
+    left: 0;
+    width: 250px;
+    padding-top: 20px;
+    transition: all 0.3s ease;
+}
+  
+.sidebar .logo {
+text-align: center;
+margin-bottom: 20px;
+}
+
+.sidebar-wrapper {
+padding-left: 10px;
+}
+
+.sidebar-link {
+display: block;
+color: #fff;
+padding: 15px;
+text-decoration: none;
+border-bottom: 1px solid #ddd;
+transition: background 0.3s ease;
+}
+
+.sidebar-link:hover {
+background-color: #495057;
+}
+
+/* Make Sidebar Collapsible on Smaller Screens */
+@media (max-width: 768px) {
+.sidebar {
+    position: absolute;
+    left: -250px;
+    top: 0;
+    height: 100%;
+    width: 250px;
+    transition: left 0.3s ease;
+}
+.sidebar.open {
+    left: 0;
+}
+.main-panel {
+    margin-left: 0;
+}
+.navbar-nav {
+    margin-right: 0;
+}
+.navbar-toggler {
+    background-color: #343a40;
+}
+}
+
+
+/* CSS to make the table fit within the main content */
+.main-container {
+    width: 100%;
+    max-width: 1200px;  /* Adjust the maximum width as needed */
+    margin: 0 auto;  /* Center the container */
+}
+
+.table {
+    width: 100%;
+    table-layout: fixed;  /* Ensures the table uses the available space evenly */
+    overflow-x: auto;  /* Allows horizontal scrolling if the content overflows */
+}
+
+thead, tbody {
+    display: block;
+}
+
+tbody {
+    overflow-y: auto;
+    height: 400px;  /* Set a fixed height for scrolling */
+    display: block;
+}
